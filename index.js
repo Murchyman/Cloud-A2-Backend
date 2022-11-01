@@ -39,6 +39,21 @@ app.post("/upload", async (req, res) => {
   res.send("Hello World!");
 });
 
+app.get("/getURLs", async (req, res) => {
+  const params = {
+    Bucket: "n11099887wikistore",
+  };
+  const data = await s3.listObjectsV2(params).promise();
+  const urls = data.Contents.map((item) => {
+    return s3.getSignedUrl("getObject", {
+      Bucket: "n11099887wikistore",
+      Key: item.Key,
+      Expires: 60 * 60 * 24,
+    });
+  });
+  res.send(urls);
+});
+
 app.listen(3001, () => {
   console.log(`Example app listening at http://localhost:3001`);
 });
