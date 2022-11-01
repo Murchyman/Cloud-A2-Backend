@@ -45,11 +45,14 @@ app.get("/getURLs", async (req, res) => {
   };
   const data = await s3.listObjectsV2(params).promise();
   const urls = data.Contents.map((item) => {
-    return s3.getSignedUrl("getObject", {
-      Bucket: "n11099887wikistore",
-      Key: item.Key,
-      Expires: 60 * 60 * 24,
-    });
+    return {
+      url: s3.getSignedUrl("getObject", {
+        Bucket: "n11099887wikistore",
+        Key: item.Key,
+        Expires: 60 * 60 * 24,
+      }),
+      name: item.Key,
+    };
   });
   res.send(urls);
 });
