@@ -38,12 +38,12 @@ app.post("/upload", async (req, res) => {
       .putObject({
         Bucket: "n11099887wikistore",
         Key: req.files.image.md5,
-        Body: finalbuf.toString("base64"),
+        Body: finalbuf,
       })
       .promise();
     await client.set(req.files.image.md5, finalbuf.toString("base64"));
+    res.send(req.files.image.md5);
   });
-  res.send("Hello World!");
 });
 
 app.get("/getData", async (req, res) => {
@@ -73,7 +73,7 @@ app.get("/getData", async (req, res) => {
           await client.set(key, data.Body.toString("base64"));
           return {
             key,
-            data: data.Body,
+            data: data.Body.toString("base64"),
             origin: "bucket",
           };
         }
