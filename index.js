@@ -60,7 +60,7 @@ app.get("/getData", async (req, res) => {
         if (cached) {
           return {
             key,
-            data: cached,
+            data: cached.toString("base64"),
             origin: "cache",
           };
         } else {
@@ -70,10 +70,10 @@ app.get("/getData", async (req, res) => {
               Key: key,
             })
             .promise();
-          await client.set(key, data.Body);
+          await client.set(key, data.Body.toString("base64"));
           return {
             key,
-            data: data.Body,
+            data: data.Body.toString("base64"),
             origin: "bucket",
           };
         }
