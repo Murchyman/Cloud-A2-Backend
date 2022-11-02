@@ -42,7 +42,11 @@ app.post("/upload", async (req, res) => {
       })
       .promise();
     await client.set(req.files.image.md5, finalbuf.toString("base64"));
-    res.send(req.files.image.md5);
+    res.send({
+      key: req.files.image.md5,
+      data: finalbuf.toString("base64"),
+      origin: "live",
+    });
   });
 });
 
