@@ -1,15 +1,21 @@
+import { createRequire } from "module";
+import { createClient } from "redis";
+const require = createRequire(import.meta.url);
 var Jimp = require("jimp");
 const express = require("express");
+const client = createClient();
 const app = express();
 var cors = require("cors");
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3({
-  accessKeyId: "ASIA5DYSEEJ4QER7HTPE",
-  secretAccessKey: "wRoPccw63WkPPVwe2WKT24wy96ZiS5D7FyD5zQly",
+  accessKeyId: "ASIA5DYSEEJ4QOSLOT7H",
+  secretAccessKey: "vQxuqmJIApDgAKmWyREMbmQNBZKB09p92O3ZkQ1u",
   sessionToken:
-    "IQoJb3JpZ2luX2VjEKL//////////wEaDmFwLXNvdXRoZWFzdC0yIkgwRgIhAOmKxGexl2rXh9rBJWVgxKH7nkk2g0+PJnOsBS0F4/xDAiEA/RImJW4BIAuZS9ug6Gm6GJ1Cg7o0JKS9yDCjpGRekB0quQMIi///////////ARACGgw5MDE0NDQyODA5NTMiDHcQFsUOmGmZL0fDpSqNAyhxDpqV3LcOeHaBOn1JPqx1kpxwvZjIwoMq1X8hc2Z9kRtEtLTEcG84DdXppHUts6O/S/iQlPNoYjYWjihgO1WioIY40nBhZ6iMJIz2EHfElCh46VOgsT2hHp7OcqduKNr1c0e4gpGoGq9KZvzc6J1VtKq2wW7Yn770wZsB4Ox0M/y3Sf6WXK9FI4MvS5iXY+w2owya2220Qrsx6TfxRZ/LKWITWzrQF7hHFGEE675fWN+D+Cmy5un/bzLlI1UhBhH5w+MM+RHmEHZNJITMuYAV5iYEne9qZM0uqzMrYvYOPh+KTAdIcSnFqunrtTSik4dQlD8H1C86r2i+3z7OMxLxO6lj1szAx6+k9o4iSD6rujzDNWt/y4ULvOepwOI18XFaWAlZ0z4XdQ8T0z69R+W5MBC9JZdIyl/xUWeLK7QAUFxdr0ENl1G8SdYa0S0pLvPILrUZAMUIxJKIERovlbZ/OzztCND3lfH4sKhWwTmWzNn2X5BOWA8u0lPR2BU02ds3ix/BzgrHEMPCeZ4w4t6DmwY6pQGBac5Ts80tLWvlTc+NqBLe4Yo7SUesJBIb9V4ChzC4XCoeoqtCdd1yxnAVJrYKH9H4se2QxAVFC8ytrJ2aM8uEKBgTHEShzdABbsJDh5hvTqEQ26HaEiEI4Z63BAqozeWfaHJgHI3umPJmLRf8Qv1N+NzaGw9awrMQ/lVRg3wMkrnfSoe7dShwtEMdUm0jl38e4EtAWivlGB+gn3njEkRfxudRMRo=",
+    "IQoJb3JpZ2luX2VjELb//////////wEaDmFwLXNvdXRoZWFzdC0yIkYwRAIgcQmNdkRAIVmOPoyU63vyI5KWNFd8f+YBn8O9dcdxO3gCIFtakmAL3MLJ9GhTk4vLt9C9C0W7oVLklRQ9XP9UbyQSKrkDCJ///////////wEQAhoMOTAxNDQ0MjgwOTUzIgzRjrs9zytdeckX5H8qjQNF1qskXT2/g/vS+iI7/UqhMumjXNjZeKlFEc1wjFtwdAUoDwKvMoDQLENB6bOhJPoijp63mJsB4TXJTRUwdqDkc6VpjrzlOm21nyfab408QZotghmLDsUwl1LXfc/jswDBfcVfNJ+Rmy0CF8/OH0q+wF0AViMHVluBlmL/trKaqP3g9/wl0HRXXoHBTo90tK0H/Un18/7PjTjl9uPXi8Su8c3MxU61GLFhPeZ9gJARhS+GhugL1Spb02oy64YhucdGSa9cIKykuwVO06vVEASvAO8MVZPgej/jEOt1vCXr0x5hSsyiBpbI2Ys/pRLh9jd5bwQnwRICutsjfUEqWaqoN1O1wRFM3chlxOviSis/btio4JbDOnhhEwsWvbc6tIW5cac3nu5O1zCh3/O2/jKVIP6nNGQf+RUFQ5Qveu9WxUwbXXafV0kCcHvENQZci+ih9SGu5Jf+mkQRUhkuJWxJgFyzOxdCCYcnEGpaaw66udtQ22Lg8ORaQsNAssWJ6pZPdWEaM1zlT6IYXuiVMMKUiJsGOqcBcKkt0ggKftinDCs8YvLUURyyqS909q5W1wKDwROWK7yedhYH/OPLXivYYL2kI6Ux2lzLqpaXw652ofaWy9dxekwnRjeN7DrwpQoI/gKWCJ2cXJxAYkfR5Gs2afUXtK4/P0syblrdXYPtY2/s3B/dV9v1udObP3q04Fts2+aF0whWfkGamx028BAUgANB8MlU8devJH6BZD1Y4cGlHMoyAMJmEaflA6k=",
 });
 const fileUpload = require("express-fileupload");
+client.on("error", (err) => console.log("Redis Client Error", err));
+await client.connect();
 app.use(fileUpload());
 app.use(cors());
 app.post("/upload", async (req, res) => {
@@ -24,37 +30,56 @@ app.post("/upload", async (req, res) => {
     if (opts.gaussian) image.gaussian(3);
     if (opts.print) image.print(font, 10, 10, "Hello world!");
     image.write("image.jpg");
-    let awsbuf;
+    let finalbuf;
     image.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
-      awsbuf = buffer;
+      finalbuf = buffer;
     });
     await s3
       .putObject({
         Bucket: "n11099887wikistore",
-        Key: req.files.image.md5 + ".jpg",
-        Body: awsbuf,
+        Key: req.files.image.md5,
+        Body: finalbuf,
       })
       .promise();
+    await client.set(req.files.image.md5, finalbuf);
   });
   res.send("Hello World!");
 });
 
-app.get("/getURLs", async (req, res) => {
+app.get("/getData", async (req, res) => {
   const params = {
     Bucket: "n11099887wikistore",
   };
+  //return an array of objects containing the keys, data and origin of each item in the bucket, first check if the key is in the redis cache, if not, get it from the bucket and add it to the cache then return the array
   const data = await s3.listObjectsV2(params).promise();
-  const urls = data.Contents.map((item) => {
-    return {
-      url: s3.getSignedUrl("getObject", {
-        Bucket: "n11099887wikistore",
-        Key: item.Key,
-        Expires: 60 * 60 * 24,
-      }),
-      name: item.Key,
-    };
-  });
-  res.send(urls);
+  const keys = data.Contents.map((item) => item.Key);
+  res.send(
+    await Promise.all(
+      keys.map(async (key) => {
+        const cached = await client.get(key);
+        if (cached) {
+          return {
+            key,
+            data: cached,
+            origin: "cache",
+          };
+        } else {
+          const data = await s3
+            .getObject({
+              Bucket: "n11099887wikistore",
+              Key: key,
+            })
+            .promise();
+          await client.set(key, data.Body);
+          return {
+            key,
+            data: data.Body,
+            origin: "bucket",
+          };
+        }
+      })
+    )
+  );
 });
 
 app.listen(3001, () => {
