@@ -1,6 +1,7 @@
 import { createRequire } from "module";
 import { createClient } from "redis";
 const require = createRequire(import.meta.url);
+require("dotenv").config();
 var Jimp = require("jimp");
 const express = require("express");
 const client = createClient();
@@ -8,10 +9,9 @@ const app = express();
 var cors = require("cors");
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3({
-  accessKeyId: "ASIA5DYSEEJ4QOSLOT7H",
-  secretAccessKey: "vQxuqmJIApDgAKmWyREMbmQNBZKB09p92O3ZkQ1u",
-  sessionToken:
-    "IQoJb3JpZ2luX2VjELb//////////wEaDmFwLXNvdXRoZWFzdC0yIkYwRAIgcQmNdkRAIVmOPoyU63vyI5KWNFd8f+YBn8O9dcdxO3gCIFtakmAL3MLJ9GhTk4vLt9C9C0W7oVLklRQ9XP9UbyQSKrkDCJ///////////wEQAhoMOTAxNDQ0MjgwOTUzIgzRjrs9zytdeckX5H8qjQNF1qskXT2/g/vS+iI7/UqhMumjXNjZeKlFEc1wjFtwdAUoDwKvMoDQLENB6bOhJPoijp63mJsB4TXJTRUwdqDkc6VpjrzlOm21nyfab408QZotghmLDsUwl1LXfc/jswDBfcVfNJ+Rmy0CF8/OH0q+wF0AViMHVluBlmL/trKaqP3g9/wl0HRXXoHBTo90tK0H/Un18/7PjTjl9uPXi8Su8c3MxU61GLFhPeZ9gJARhS+GhugL1Spb02oy64YhucdGSa9cIKykuwVO06vVEASvAO8MVZPgej/jEOt1vCXr0x5hSsyiBpbI2Ys/pRLh9jd5bwQnwRICutsjfUEqWaqoN1O1wRFM3chlxOviSis/btio4JbDOnhhEwsWvbc6tIW5cac3nu5O1zCh3/O2/jKVIP6nNGQf+RUFQ5Qveu9WxUwbXXafV0kCcHvENQZci+ih9SGu5Jf+mkQRUhkuJWxJgFyzOxdCCYcnEGpaaw66udtQ22Lg8ORaQsNAssWJ6pZPdWEaM1zlT6IYXuiVMMKUiJsGOqcBcKkt0ggKftinDCs8YvLUURyyqS909q5W1wKDwROWK7yedhYH/OPLXivYYL2kI6Ux2lzLqpaXw652ofaWy9dxekwnRjeN7DrwpQoI/gKWCJ2cXJxAYkfR5Gs2afUXtK4/P0syblrdXYPtY2/s3B/dV9v1udObP3q04Fts2+aF0whWfkGamx028BAUgANB8MlU8devJH6BZD1Y4cGlHMoyAMJmEaflA6k=",
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  sessionToken: process.env.AWS_SESSION_TOKEN,
 });
 const fileUpload = require("express-fileupload");
 client.on("error", (err) => console.log("Redis Client Error", err));
