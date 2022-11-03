@@ -21,6 +21,21 @@ app.use(cors());
 app.post("/upload", async (req, res) => {
   const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
   const opts = JSON.parse(req.body.opts);
+  //if filetype is invalid
+  if (!req.files.image.mimetype.startsWith("image")) {
+    return res.status(400).json({ error: "Please upload an image file" });
+  }
+  //if filetype is not either png or jpg or jpeg or bmp or tiff or gif
+  if (
+    !req.files.image.mimetype.endsWith("png") &&
+    !req.files.image.mimetype.endsWith("jpg") &&
+    !req.files.image.mimetype.endsWith("jpeg") &&
+    !req.files.image.mimetype.endsWith("bmp") &&
+    !req.files.image.mimetype.endsWith("tiff") &&
+    !req.files.image.mimetype.endsWith("gif")
+  ) {
+    return res.status(400).json({ error: "Please upload an image file" });
+  }
   Jimp.read(req.files.image.data, async function (err, image) {
     if (err) throw err;
     image.resize(256, 256); // resize
