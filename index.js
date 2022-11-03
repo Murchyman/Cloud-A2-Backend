@@ -28,7 +28,7 @@ app.post("/upload", async (req, res) => {
     if (opts.dither) image.dither565();
     if (opts.invert) image.invert();
     if (opts.gaussian) image.gaussian(3);
-    if (opts.print) image.print(font, 10, 10, "Hello world!");
+    if (opts.print) image.print(font, 10, 10, opts.print);
     image.write("image.jpg");
     let finalbuf;
     image.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
